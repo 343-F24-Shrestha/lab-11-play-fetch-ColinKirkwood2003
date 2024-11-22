@@ -1,10 +1,23 @@
 const userList = document.getElementById("user-list");
+const userCardTemplate = document.getElementById("user-card-template");
 
 document.addEventListener("DOMContentLoaded", async () => {
-    // This function should GET the first page of users from reqres.in.
-    // The users should be displayed in the user-list element.
-    // Each user should be in a new <div> with the user's first name, last name, and profile image.
-    // The format should follow the example user in the HTML file.
+        const response = await fetch("https://reqres.in/api/users?page=1");
 
-    // TODO
+        if (!response.ok) {
+            throw new Error(`Error fetching users: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        data.data.forEach(user => {
+            const userCard = userCardTemplate.content.cloneNode(true);
+            
+            userCard.querySelector("h2").textContent = `${user.first_name} ${user.last_name}`;
+            const userImg = userCard.querySelector("img");
+            userImg.src = user.avatar;
+            userImg.alt = `${user.first_name} ${user.last_name}`;
+
+            userList.appendChild(userCard);
+        });
 });
